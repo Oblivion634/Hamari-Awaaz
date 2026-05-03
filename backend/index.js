@@ -14,7 +14,7 @@ const app = express();
 // Enable CORS
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://hamari-awaaz.vercel.app/"],
+    origin: ["http://localhost:5173", "https://hamari-awaaz.vercel.app"],
     credentials: true,
   }),
 );
