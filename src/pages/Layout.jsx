@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { getCurrentUser } from "../services/authService";
 import Footer from "../components/Footer";
-import ScrollToTop from "../components/ScrolltoTop";
+import ScrollToTop from "../components/ScrollToTop";
 import Loading from "../components/Loading";
 
 const Layout = () => {
