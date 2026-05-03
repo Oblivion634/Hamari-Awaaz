@@ -46,7 +46,7 @@ router.get(
   "/google/callback",
   passport.authenticate("google", {
     session: false,
-    failureRedirect: "http://localhost:5173/login",
+    failureRedirect: "https://hamari-awaaz.vercel.app/login",
   }),
   (req, res) => {
     const token = jwt.sign(
