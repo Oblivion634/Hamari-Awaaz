@@ -4,7 +4,7 @@
 
 // ---------- BASE URL ----------
 // Root API path consumed by the shared Axios client.
-export const BASE_URL = "http://localhost:9000/api";
+export const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // ---------- ENDPOINT MAP ----------
 // Keeps route strings centralized for auth and issue requests.
@@ -18,5 +18,5 @@ export const ENDPOINTS = {
   GETISSUES: "/issue/getissues",
   GETISSUE: "/issue/getissue",
   UPDATEUSER: "/auth/update",
-  DELETEUSER:"/auth/deleteUser"
+  DELETEUSER: "/auth/deleteUser",
 };
