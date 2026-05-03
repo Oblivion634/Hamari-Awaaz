@@ -86,7 +86,7 @@ export default function SignupPage() {
               <button
                 type="button"
                 onClick={() => {
-                  window.location.href = "http://localhost:9000/api/auth/google";
+                  window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/google`;
                 }}
                 className=" md:col-span-2 w-full flex items-center justify-center gap-3 border border-gray-300 py-3 rounded-lg font-semibold hover:bg-gray-50 transition mb-6 mt-4"
               >
