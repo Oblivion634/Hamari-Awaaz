@@ -1,4 +1,9 @@
 import multer from "multer";
+import fs from "fs";
+
+if (!fs.existsSync("uploads")) {
+  fs.mkdirSync("uploads");
+}
 
 // Store uploaded files locally
 const storage = multer.diskStorage({
