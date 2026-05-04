@@ -8,8 +8,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL:
-        "https://hamari-awaaz-m8pu.onrender.com/api/auth/google/callback",
+      callbackURL: "https://hamari-awaaz.onrender.com/api/auth/google/callback",
     },
 
     // Handle Google login
