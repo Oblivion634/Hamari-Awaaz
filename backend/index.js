@@ -15,7 +15,7 @@ const app = express();
 app.use(
   cors({
     origin: ["https://hamari-awaaz.vercel.app"],
-    credentials: true,
+    withCredentials: true,
   }),
 );
 
