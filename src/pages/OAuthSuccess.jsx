@@ -19,6 +19,7 @@ const OAuthSuccess = () => {
                 }
             } catch (error) {
                 console.log(error.response?.data || error.message);
+                alert("Nhi aa rha")
                 navigate("/login");
             }
         };

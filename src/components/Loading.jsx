@@ -51,7 +51,7 @@ const Loading = () => {
                         transition={{
                             duration: 6,
                             repeat: Infinity,
-                            delay: index * 2,
+                            delay: index * 4,
                         }}
                     >
                         {item}
@@ -105,11 +105,11 @@ const Loading = () => {
                         ease: "easeInOut",
                     }}
                 >
-                    <div className="w-36 h-36 md:w-52 md:h-52 rounded-full bg-white/20 backdrop-blur-lg border border-white/30 flex items-center justify-center shadow-2xl">
+                    <div className="w-48 h-48 md:w-60 md:h-60 rounded-full bg-white/20 backdrop-blur-lg border border-white/30 flex items-center justify-center shadow-2xl">
                         <img
                             src={mascot}
                             alt="Hamari Awaaz Mascot"
-                            className="w-28 h-28 md:w-44 md:h-44 object-contain"
+                            className="w-35 h-35 md:w-50 md:h-50 object-contain"
                         />
                     </div>
 
