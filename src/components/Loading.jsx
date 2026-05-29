@@ -51,11 +51,7 @@ const Loading = () => {
                         transition={{
                             duration: 6,
                             repeat: Infinity,
-<<<<<<< HEAD
                             delay: index * 6,
-=======
-                            delay: index * 4,
->>>>>>> 6077ecb7da01c38a9cbe294f8932677f9b2668bd
                         }}
                     >
                         {item}
