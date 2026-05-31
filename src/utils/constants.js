@@ -20,4 +20,6 @@ export const ENDPOINTS = {
   UPDATEUSER: "/auth/update",
   DELETEUSER: "/auth/deleteUser",
   VERIFY_SIGNUP_OTP: "/auth/verify-signup-otp",
+  FORGOT_PASSWORD: "/auth/forgot-password",
+  RESET_PASSWORD: "/auth/reset-password",
 };
