@@ -9,6 +9,8 @@ import {
   updateAvatar,
   verifySignupOtp,
   resendSignupOtp,
+  forgotPassword,
+  resetPassword,
 } from "../controllers/authController.js";
 import { protect, authorizeRoles } from "../middlewares/authMiddleware.js";
 import passport from "passport";
@@ -75,5 +77,10 @@ router.get(
 
 // Avatar upload
 router.put("/update-avatar", protect, upload.single("avatar"), updateAvatar);
+
+//FOROT AND RESET PASSWORD
+router.post("/forgot-password", forgotPassword);
+
+router.post("/reset-password/:token", resetPassword);
 
 export default router;
