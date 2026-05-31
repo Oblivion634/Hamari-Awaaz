@@ -15,6 +15,8 @@ import NotFound from "../pages/NotFound";
 import UserProfile from "../pages/UserProfile";
 import OAuthSuccess from "../pages/OAuthSuccess";
 import VerifySignupOtp from "../pages/VerifySignupOtp";
+import ForgotPassword from "../pages/ForgotPassword";
+import ResetPassword from "../pages/ResetPassword";
 
 // ==================== APPLICATION ROUTER ====================
 // Defines public pages, protected pages, and role-restricted dashboards.
@@ -95,6 +97,14 @@ export const myRoutes = createBrowserRouter([
             {
                 path: "/verify-signup-otp",
                 element: <VerifySignupOtp />
+            },
+            {
+                path: "/forgot-password",
+                element: <ForgotPassword />
+            },
+            {
+                path: "/reset-password/:token",
+                element: <ResetPassword />
             },
             {
                 path: "*",
