@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { Mail, Smartphone, ShieldCheck } from "lucide-react";
 import { motion } from "framer-motion";
@@ -8,6 +8,22 @@ import api from "../api/axios";
 import { ENDPOINTS } from "../utils/constants";
 
 export default function VerifySignupOtp() {
+
+    const [countdown, setCountdown] = useState(60);
+    const [canResend, setCanResend] = useState(false);
+
+    useEffect(() => {
+        if (countdown <= 0) {
+            setCanResend(true);
+            return;
+        }
+
+        const timer = setInterval(() => {
+            setCountdown((prev) => prev - 1);
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [countdown]);
 
     const navigate = useNavigate();
 
@@ -71,6 +87,25 @@ export default function VerifySignupOtp() {
 
         }
 
+    };
+
+    const handleResendOtp = async () => {
+        try {
+            const email =
+                localStorage.getItem("signupEmail");
+
+            const res = await api.post(
+                ENDPOINTS.RESEND_SIGNUP_OTP,
+                { email }
+            );
+
+            toast.success(res.data.message);
+        } catch (error) {
+            toast.error(
+                error.response?.data?.message ||
+                "Failed to resend OTP"
+            );
+        }
     };
 
     return (
@@ -177,6 +212,17 @@ export default function VerifySignupOtp() {
                                 : "Verify Account"
                         }
 
+                    </button>
+
+                    <button
+                        type="button"
+                        disabled={!canResend}
+                        onClick={handleResendOtp}
+                        className="text-blue-500 disabled:text-gray-400"
+                    >
+                        {canResend
+                            ? "Resend OTP"
+                            : `Resend OTP in ${countdown}s`}
                     </button>
 
                 </form>
