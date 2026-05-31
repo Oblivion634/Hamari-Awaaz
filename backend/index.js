@@ -16,7 +16,7 @@ const app = express();
 // Enable CORS
 app.use(
   cors({
-    origin: "https://hamari-awaaz-cb8cou6vl-shalini-singhs-projects-b2733fca.vercel.app/",
+    origin: "https://hamari-awaaz-cb8cou6vl-shalini-singhs-projects-b2733fca.vercel.app",
     credentials: true,
   }),
 );
