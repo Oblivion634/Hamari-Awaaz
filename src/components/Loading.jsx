@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
 import {
     Megaphone,
     MapPin,
@@ -27,6 +28,15 @@ const testimonials = [
 ];
 
 const Loading = () => {
+    const [current, setCurrent] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrent((prev) => (prev + 1) % testimonials.length);
+        }, 6000);
+
+        return () => clearInterval(interval);
+    }, []);
     return (
         <div className="relative min-h-screen w-full overflow-hidden flex items-center justify-center bg-black">
             {/* Background Image */}
@@ -41,22 +51,19 @@ const Loading = () => {
             <div className="absolute inset-0 bg-black/55" />
 
             {/* Floating Testimonials */}
-            <div className="absolute top-16 text-center px-4">
-                {testimonials.map((item, index) => (
+            <div className="absolute top-16 left-1/2 -translate-x-1/2 text-center px-4">
+                <AnimatePresence mode="wait">
                     <motion.p
-                        key={index}
-                        className="absolute left-1/2 -translate-x-1/2 text-white/70 text-lg md:text-2xl font-semibold whitespace-nowrap"
+                        key={current}
+                        className="text-white/70 text-lg md:text-2xl font-semibold whitespace-nowrap"
                         initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: [0, 1, 1, 0], y: [20, 0, 0, -20] }}
-                        transition={{
-                            duration: 6,
-                            repeat: Infinity,
-                            delay: index * 6,
-                        }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.8 }}
                     >
-                        {item}
+                        {testimonials[current]}
                     </motion.p>
-                ))}
+                </AnimatePresence>
             </div>
 
             {/* Main Circular Area */}
