@@ -47,11 +47,6 @@ export const signup = async (req, res) => {
       });
     }
 
-    // ================= REMOVE OLD OTP RECORD =================
-
-    await SignupOtp.deleteMany({
-      $or: [{ email }, { phone }],
-    });
 
     // ================= HASH PASSWORD =================
 
@@ -79,7 +74,7 @@ export const signup = async (req, res) => {
       emailOtp,
       phoneOtp,
 
-      expiresAt: Date.now() + 10 * 60 * 1000,
+      expiresAt: Date.now() + 1 * 60 * 1000,
     });
 
     // ================= SEND EMAIL OTP =================
@@ -152,9 +147,6 @@ export const verifySignupOtp = async (req, res) => {
     // ================= CHECK OTP EXPIRY =================
 
     if (otpRecord.expiresAt < Date.now()) {
-      await SignupOtp.deleteOne({
-        _id: otpRecord._id,
-      });
 
       return res.status(400).json({
         success: false,
@@ -207,12 +199,6 @@ export const verifySignupOtp = async (req, res) => {
       },
     });
 
-    // ================= DELETE OTP RECORD =================
-
-    await SignupOtp.deleteOne({
-      _id: otpRecord._id,
-    });
-
     // ================= GENERATE JWT =================
 
     const token = jwt.sign(
@@ -263,6 +249,66 @@ export const verifySignupOtp = async (req, res) => {
   }
 };
 
+export const resendSignupOtp = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const otpRecord = await SignupOtp.findOne({ email });
+
+    if (!otpRecord) {
+      return res.status(404).json({
+        success: false,
+        message: "Signup session not found. Please register again.",
+      });
+    }
+
+    const emailOtp = generateOtp();
+    const phoneOtp = generateOtp();
+
+    otpRecord.emailOtp = emailOtp;
+    otpRecord.phoneOtp = phoneOtp;
+
+    // Fresh expiry
+    otpRecord.expiresAt = Date.now() + 10 * 60 * 1000;
+
+    await otpRecord.save();
+
+    await sendEmail(
+      email,
+      "New OTP - Hamari Awaaz",
+      `
+      <div style="font-family:Arial;padding:20px">
+        <h2>Email Verification OTP</h2>
+
+        <p>Your new OTP is:</p>
+
+        <h1 style="letter-spacing:5px;color:#138808">
+          ${emailOtp}
+        </h1>
+
+        <p>This OTP expires in 10 minutes.</p>
+      </div>
+      `,
+    );
+
+    await sendSms(
+      otpRecord.phone,
+      `Your Hamari Awaaz OTP is ${phoneOtp}. Valid for 10 minutes.`,
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "OTP resent successfully",
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
 // ==================== LOGIN ====================
 
 export const login = async (req, res) => {
@@ -328,63 +374,6 @@ export const login = async (req, res) => {
       success: false,
       message: "Something Went Wrong",
       error: error.message,
-    });
-  }
-};
-
-export const resendSignupOtp = async (req, res) => {
-  try {
-    const { userId } = req.body;
-
-    const user = await UserModel.findById(userId);
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
-
-    // DELETE OLD OTP
-    await SignupOtp.deleteMany({ userId });
-
-    // GENERATE NEW OTPs
-    const emailOtp = generateOtp();
-    const phoneOtp = generateOtp();
-
-    // SAVE NEW OTP
-    await SignupOtp.create({
-      userId,
-      email: user.email,
-      phone: user.phone,
-      emailOtp,
-      phoneOtp,
-      expiresAt: Date.now() + 10 * 60 * 1000,
-    });
-
-    // SEND EMAIL
-    await sendEmail(
-      user.email,
-      "Resend OTP - Hamari Awaaz",
-      `
-        <div style="font-family:Arial">
-          <h2>Your New OTP</h2>
-          <h1>${emailOtp}</h1>
-          <p>Expires in 10 minutes</p>
-        </div>
-      `,
-    );
-
-    console.log("Phone OTP:", phoneOtp);
-
-    return res.status(200).json({
-      success: true,
-      message: "OTP resent successfully",
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
     });
   }
 };
