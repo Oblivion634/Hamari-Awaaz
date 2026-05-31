@@ -11,6 +11,7 @@ import {
   resendSignupOtp,
   forgotPassword,
   resetPassword,
+  removeAvatar,
 } from "../controllers/authController.js";
 import { protect, authorizeRoles } from "../middlewares/authMiddleware.js";
 import passport from "passport";
@@ -83,5 +84,6 @@ router.post("/forgot-password", forgotPassword);
 
 router.post("/reset-password/:token", resetPassword);
 router.post("/resend-signup-otp", resendSignupOtp);
+router.delete("/remove-avatar", protect, removeAvatar);
 
 export default router;
