@@ -74,7 +74,7 @@ export default function VerifySignupOtp() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#FFF5E6] via-white to-[#E8F5E9] flex items-center justify-center px-4">
+        <div className="p-10 bg-gradient-to-br from-[#FFF5E6] via-white to-[#E8F5E9] flex items-center justify-center px-4">
 
             <motion.div
                 initial={{ opacity: 0, y: 30 }}
