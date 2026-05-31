@@ -130,8 +130,8 @@ export const verifySignupOtp = async (req, res) => {
 
     const { email, emailOtp, phoneOtp } = req.body;
 
-    const otpRecord = await SignupOtp.findOne({
-      email,
+    const otpRecord = await SignupOtp.findOne({ email }).sort({
+      createdAt: -1,
     });
 
     console.log("OTP RECORD:", otpRecord);
@@ -251,7 +251,9 @@ export const resendSignupOtp = async (req, res) => {
   try {
     const { email } = req.body;
 
-    const otpRecord = await SignupOtp.findOne({ email });
+    const otpRecord = await SignupOtp.findOne({ email }).sort({
+      createdAt: -1,
+    });
 
     if (!otpRecord) {
       return res.status(404).json({
@@ -649,4 +651,3 @@ export const resetPassword = async (req, res) => {
     });
   }
 };
-
