@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Bell, User, Menu, X, LogOut } from "lucide-react";
 import myImage from "../assets/logo.png";
@@ -11,6 +11,26 @@ import { ENDPOINTS } from "../utils/constants";
 // ===========================================================
 
 const Navbar = ({ user, setUser }) => {
+  const profileRef = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(event.target)
+      ) {
+        setProfile(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener(
+        "mousedown",
+        handleClickOutside
+      );
+    };
+  }, []);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [profile, setProfile] = useState(false);
@@ -96,7 +116,7 @@ const Navbar = ({ user, setUser }) => {
             )}
 
             {isAuthenticated && (
-              <div className="flex gap-2 ml-10">
+              <div className="flex gap-2 ml-10" ref={profileRef}>
                 <div
 
                   className="flex items-center gap-1 p-2 text-gray-800 rounded transition-colors"
@@ -117,7 +137,7 @@ const Navbar = ({ user, setUser }) => {
 
                 {/* ---------- DESKTOP PROFILE MENU ---------- */}
                 {profile && (
-                  <div className="absolute right-6 mt-15 w-50 bg-white shadow-lg rounded-lg  z-50 px-8 py-8 flex flex-col gap-3">
+                  <div className="absolute right-0 top-14 w-52 bg-white shadow-lg rounded-lg z-50 p-4 flex flex-col gap-3" ref={profileRef}>
 
                     <Link
                       to="/user-profile"
