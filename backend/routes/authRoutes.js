@@ -82,5 +82,6 @@ router.put("/update-avatar", protect, upload.single("avatar"), updateAvatar);
 router.post("/forgot-password", forgotPassword);
 
 router.post("/reset-password/:token", resetPassword);
+router.post("/resend-signup-otp", resendSignupOtp);
 
 export default router;
