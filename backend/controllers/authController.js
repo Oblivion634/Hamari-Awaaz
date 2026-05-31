@@ -47,7 +47,6 @@ export const signup = async (req, res) => {
       });
     }
 
-
     // ================= HASH PASSWORD =================
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -74,7 +73,7 @@ export const signup = async (req, res) => {
       emailOtp,
       phoneOtp,
 
-      expiresAt: Date.now() + 1 * 60 * 1000,
+      expiresAt: Date.now() + 5 * 60 * 1000,
     });
 
     // ================= SEND EMAIL OTP =================
@@ -94,7 +93,7 @@ export const signup = async (req, res) => {
         </h1>
 
         <p>
-          This OTP expires in 10 minutes.
+          This OTP expires in 5 minutes.
         </p>
       </div>
       `,
@@ -105,7 +104,7 @@ export const signup = async (req, res) => {
     // SEND SMS OTP
     await sendSms(
       phone,
-      `Your Hamari Awaaz OTP is ${phoneOtp}. Valid for 10 minutes.`,
+      `Your Hamari Awaaz OTP is ${phoneOtp}. Valid for 5 minutes.`,
     );
     return res.status(200).json({
       success: true,
@@ -147,7 +146,6 @@ export const verifySignupOtp = async (req, res) => {
     // ================= CHECK OTP EXPIRY =================
 
     if (otpRecord.expiresAt < Date.now()) {
-
       return res.status(400).json({
         success: false,
         message: "OTP expired",
@@ -269,7 +267,7 @@ export const resendSignupOtp = async (req, res) => {
     otpRecord.phoneOtp = phoneOtp;
 
     // Fresh expiry
-    otpRecord.expiresAt = Date.now() + 10 * 60 * 1000;
+    otpRecord.expiresAt = Date.now() + 5 * 60 * 1000;
 
     await otpRecord.save();
 
@@ -286,14 +284,14 @@ export const resendSignupOtp = async (req, res) => {
           ${emailOtp}
         </h1>
 
-        <p>This OTP expires in 10 minutes.</p>
+        <p>This OTP expires in 5 minutes.</p>
       </div>
       `,
     );
 
     await sendSms(
       otpRecord.phone,
-      `Your Hamari Awaaz OTP is ${phoneOtp}. Valid for 10 minutes.`,
+      `Your Hamari Awaaz OTP is ${phoneOtp}. Valid for 5 minutes.`,
     );
 
     return res.status(200).json({
@@ -651,3 +649,4 @@ export const resetPassword = async (req, res) => {
     });
   }
 };
+
