@@ -35,6 +35,7 @@ export default function UserProfile() {
     const [isEditing, setIsEditing] = useState(false);
     const [activeTab, setActiveTab] = useState("profile");
     const [statss, setStatss] = useState({});
+    const [showAvatarModal, setShowAvatarModal] = useState(false);
 
 
     const navigate = useNavigate();
@@ -194,6 +195,18 @@ export default function UserProfile() {
         );
     };
 
+    const handleRemoveAvatar = async () => {
+        try {
+            const res = await api.delete("/auth/remove-avatar");
+
+            setUser(res.data.user);
+            setUserData(res.data.user);
+
+        } catch (error) {
+            console.log(error.response?.data || error.message);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-gray-50 py-8 px-4">
             <div className="max-w-6xl mx-auto">
@@ -204,22 +217,40 @@ export default function UserProfile() {
                     className="bg-gradient-to-r from-[#FF9933] to-[#e88a2e] rounded-2xl shadow-xl p-8 mb-6"
                 >
                     <div className="flex flex-col md:flex-row items-center gap-6">
-                        <div className="relative">
-                            <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-lg">
-                                {user?.avatar?.imageURL ? <img src={user.avatar.imageURL} className="rounded-full w-full h-full object-cover" /> : <div className="font-bold text-6xl">{user.name[0]}</div>}
+                        <div
+                            className="relative group w-32 h-32"
+                        >
+                            <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-lg overflow-hidden">
+                                {user?.avatar?.imageURL ? (
+                                    <img
+                                        src={user.avatar.imageURL}
+                                        className="w-full h-full object-cover"
+                                        alt="avatar"
+                                    />
+                                ) : (
+                                    <div className="font-bold text-6xl">
+                                        {user?.name?.[0]}
+                                    </div>
+                                )}
                             </div>
-                            <label className="absolute bottom-0 right-0 w-10 h-10 bg-[#1E88E5] rounded-full flex items-center justify-center text-white shadow-lg hover:bg-[#1565C0] transition-colors cursor-pointer">
 
-                                <Camera className="w-5 h-5" />
-
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleAvatarChange}
-                                    className="hidden"
-                                />
-
-                            </label>
+                            {/* Hover Overlay */}
+                            <button
+                                onClick={() => setShowAvatarModal(true)}
+                                className="
+            absolute inset-0
+            rounded-full
+            bg-black/40
+            opacity-0
+            group-hover:opacity-100
+            transition-all
+            duration-200
+            flex items-center justify-center
+            cursor-pointer
+        "
+                            >
+                                <Edit2 className="w-8 h-8 text-white" />
+                            </button>
                         </div>
                         <div className="text-center md:text-left flex-1">
                             <div className="flex gap-8">
@@ -241,7 +272,7 @@ export default function UserProfile() {
 
                                     <button
                                         onClick={handleEdit}
-                                        className="px-6 py-3 bg-white text-[#FF9933] rounded-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg flex items-center gap-2"
+                                        className="px-6 py-3 bg-white text-[#FF9933] rounded-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg flex items-center gap-2 cursor-pointer"
                                     >
                                         <Edit2 className="w-5 h-5" />
                                         Edit Profile
@@ -725,6 +756,55 @@ export default function UserProfile() {
                     </div>
                 </div>
             </div>
+            {
+                showAvatarModal && (
+                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                        <div className="bg-white rounded-xl p-6 w-[350px] shadow-xl">
+
+                            <h2 className="text-xl font-bold mb-4">
+                                Profile Picture
+                            </h2>
+
+                            <div className="flex flex-col gap-3">
+
+                                <label className="cursor-pointer bg-blue-500 text-white px-4 py-3 rounded-lg text-center hover:bg-blue-600">
+                                    Upload New Image
+
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) => {
+                                            handleAvatarChange(e);
+                                            setShowAvatarModal(false);
+                                        }}
+                                        className="hidden"
+                                    />
+                                </label>
+
+                                {user?.avatar?.imageURL && (
+                                    <button
+                                        onClick={async () => {
+                                            await handleRemoveAvatar();
+                                            setShowAvatarModal(false);
+                                        }}
+                                        className="bg-red-500 text-white px-4 py-3 rounded-lg cursor-pointer hover:bg-red-600"
+                                    >
+                                        Remove Image
+                                    </button>
+                                )}
+
+                                <button
+                                    onClick={() => setShowAvatarModal(false)}
+                                    className="border px-4 py-3 rounded-lg hover:bg-gray-100 cursor-pointer"
+                                >
+                                    Cancel
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
         </div>
     );
 }
