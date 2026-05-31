@@ -58,9 +58,9 @@ const userSchema = new mongoose.Schema(
     },
 
     isVerified: {
-  type: Boolean,
-  default: false,
-},
+      type: Boolean,
+      default: false,
+    },
 
     googleId: {
       type: String,
@@ -82,6 +82,13 @@ const userSchema = new mongoose.Schema(
         type: String,
         default: "",
       },
+    },
+    resetPasswordToken: {
+      type: String,
+    },
+
+    resetPasswordExpire: {
+      type: Date,
     },
   },
   { timestamps: true, versionKey: false },
