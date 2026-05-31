@@ -651,3 +651,41 @@ export const resetPassword = async (req, res) => {
     });
   }
 };
+
+export const removeAvatar = async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // Delete from Cloudinary
+    if (user.avatar?.publicId) {
+      await cloudinary.uploader.destroy(user.avatar.publicId);
+    }
+
+    // Reset avatar
+    user.avatar = {
+      imageURL: "",
+      publicId: "",
+    };
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Avatar removed successfully",
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
