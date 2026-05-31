@@ -9,6 +9,7 @@ import {
   UserPlus,
   MapPin,
   Shield,
+  Eye, EyeOff
 } from "lucide-react";
 
 import api from "../api/axios.js";
@@ -23,6 +24,8 @@ import toast from "react-hot-toast";
 
 export default function SignupPage() {
   const [role, setRole] = useState("user");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -358,14 +361,26 @@ export default function SignupPage() {
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
 
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="••••••••"
                     required
-                    className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#138808]"
+                    className="w-full pl-12 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#138808] transition-all duration-300"
                   />
+
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5 cursor-pointer" />
+                    ) : (
+                      <Eye className="w-5 h-5 cursor-pointer" />
+                    )}
+                  </button>
                 </div>
               </div>
 
@@ -379,17 +394,44 @@ export default function SignupPage() {
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
 
                   <input
-                    type="password"
+                    type={showConfirmPassword ? "text" : "password"}
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     placeholder="••••••••"
                     required
-                    className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#138808]"
+                    className="w-full pl-12 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#138808] transition-all duration-300"
                   />
-                </div>
-              </div>
 
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setShowConfirmPassword(!showConfirmPassword)
+                    }
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition"
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="w-5 h-5 cursor-pointer" />
+                    ) : (
+                      <Eye className="w-5 h-5 cursor-pointer" />
+                    )}
+                  </button>
+                </div>
+
+                {formData.confirmPassword &&
+                  formData.password !== formData.confirmPassword && (
+                    <p className="text-red-500 text-xs mt-1">
+                      Passwords do not match
+                    </p>
+                  )}
+
+                {formData.confirmPassword &&
+                  formData.password === formData.confirmPassword && (
+                    <p className="text-green-600 text-xs mt-1">
+                      Passwords match ✓
+                    </p>
+                  )}
+              </div>
               {/* TERMS */}
               <div className="md:col-span-2 flex items-center justify-center">
                 <input
@@ -419,10 +461,13 @@ export default function SignupPage() {
               {/* SUBMIT */}
               <button
                 type="submit"
-                className={`md:col-span-2 w-full text-white py-3 rounded-lg font-semibold transition-all shadow-lg hover:shadow-xl ${role === "admin"
-                  ? "bg-blue-600 hover:bg-blue-700"
+                className={`md:col-span-2 w-full text-white py-3 rounded-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl ${role === "admin"
+                  ? "bg-blue-600  hover:bg-blue-700"
                   : "bg-[#138808] hover:bg-[#0f6b06]"
                   }`}
+                disabled={
+                  formData.password !== formData.confirmPassword
+                }
               >
                 Create {role === "admin" ? "Admin" : "User"} Account
               </button>
