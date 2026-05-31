@@ -22,4 +22,5 @@ export const ENDPOINTS = {
   VERIFY_SIGNUP_OTP: "/auth/verify-signup-otp",
   FORGOT_PASSWORD: "/auth/forgot-password",
   RESET_PASSWORD: "/auth/reset-password",
+  RESEND_SIGNUP_OTP: "/auth/resend-signup-otp",
 };
